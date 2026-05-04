@@ -1,26 +1,37 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 
-// TODO 1: Import connectToMongoDB from ./config/db.js
-// TODO 2: Import studentRouter from ./routes/studentsRoute.js
+// IMPORT DB CONNECTION
+import connectToMongoDB from "./config/db.js";
+
+// IMPORT ROUTES
+import studentRouter from "./routes/studentsRoute.js";
+import roomRouter from "./routes/roomRoute.js"; // ← your NEW resource
 
 const app = express();
 const port = 3000;
 
-// TODO 3: Call connectToMongoDB() here to establish the DB connection
+// CONNECT TO DATABASE
+connectToMongoDB();
 
-// Middleware — already set up for you
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// TODO 4: Mount studentRouter at "/api/students"
-// Hint: app.use("/api/students", studentRouter)
+// MOUNT ROUTES
+app.use("/api/students", studentRouter);
+app.use("/api/room", roomRouter); // ← REQUIRED for your assignment
 
+// Test route
 app.get("/", (req, res) => {
   res.send("Server is running ...");
 });
 
+// Start server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
